@@ -93,9 +93,13 @@ class Sentuator extends Agent {
    * Enable/disable sensor/actuator.
    */
   protected void enable(boolean b) {
+    if (enabled == b) return
     enabled = b
-    if (!b) {
-      setPollingInterval(0)
+    if (b) {
+      if (pollInterval > 0) setPollingInterval(pollInterval)
+      setStatus(Status.OK)
+    } else {
+      setPollingInterval(-1)
       setStatus(Status.DISABLED)
     }
   }
@@ -107,7 +111,7 @@ class Sentuator extends Agent {
    */
   protected void setPollingInterval(long ms) {
     if (poll != null) poll.stop()
-    if (ms <= 0) poll = null
+    if (ms <= 0 || !enabled) poll = null
     else {
       poll = new TickerBehavior(ms) {
         @Override
@@ -121,7 +125,7 @@ class Sentuator extends Agent {
       }
       add(poll)
     }
-    pollInterval = ms
+    if (ms >= 0) pollInterval = ms
   }
 
   /**
@@ -159,14 +163,9 @@ class Sentuator extends Agent {
    */
   protected void setConfigParam(String key, Object value) {
     try {
-      if (key == ENABLE) {
-        if (value) enabled = true
-        else enabled = false
-      } else if (key == POLL) {
-        setPollingInterval((long)value)
-      } else if (config.containsKey(key)) {
-        config.put(key, value)
-      }
+      if (key == ENABLE) enable(value as boolean)
+      else if (key == POLL) setPollingInterval((long)value)
+      else if (config.containsKey(key)) config.put(key, value)
     } catch (Exception ex) {
       // do nothing
     }
