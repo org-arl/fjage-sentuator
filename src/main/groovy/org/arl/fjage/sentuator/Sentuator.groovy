@@ -14,7 +14,7 @@ class Sentuator extends Agent {
 
   protected Configuration cfg = null
   protected TickerBehavior poll = null
-  protected long pollInterval = -1
+  protected long pollInterval = 0
   protected boolean enabled = true
   protected AgentID ntf = null
   private Status currentStatus = new Status(Status.OK)
@@ -119,6 +119,7 @@ class Sentuator extends Agent {
           }
         }
       }
+      add(poll)
     }
     pollInterval = ms
   }
@@ -194,6 +195,7 @@ class Sentuator extends Agent {
    */
   protected Message processRequest(Message req) {
     if (req instanceof MeasurementReq) {
+      if (!enabled) return new Message(req, Performative.REFUSE)
       Measurement m = req.type ? measure(req.type) : measure()
       if (m == null) return new Message(req, Performative.REFUSE)
       m.recipient = req.sender
@@ -201,6 +203,7 @@ class Sentuator extends Agent {
       return m
     }
     if (req instanceof ActuationReq) {
+      if (!enabled) return new Message(req, Performative.REFUSE)
       boolean ok = req.type ? actuate(req.type, req.value) : actuate(req.value)
       return new Message(req, ok ? Performative.AGREE : Performative.REFUSE)
     }
@@ -224,6 +227,8 @@ class Sentuator extends Agent {
       if (req.settings.size() == 0 && req.queries.size() == 0) {
         if (cfg != null) {
           try {
+            rsp.cfg.put(ENABLE, enabled)
+            rsp.cfg.put(POLL, pollInterval)
             cfg.properties.each { k, v ->
               if (k instanceof String && k != "class") rsp.cfg.put((String)k, v)
             }
