@@ -1,0 +1,29 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+defaultTasks 'jar'
+
+archivesBaseName = 'fjage-sentuator'
+
+targetCompatibility = 1.8
+sourceCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'org.codehaus.groovy:groovy-all:2.4.4'
+  compile 'com.github.org-arl:fjage:1.5.1'
+}
+
+compileGroovy {
+  options.compilerArgs << "-Xlint:all"
+  options.compilerArgs << "-Xlint:-options"
+}
+
+jar {
+  //manifest {
+  //  attributes 'Build-Owner': System.getenv().USER, 'Build-Timestamp': new Date().format('d-MM-yyyy_HH:mm:ss'), 'Build-Version': version
+  //}
+}
