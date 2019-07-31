@@ -12,7 +12,7 @@ class Sentuator extends Agent {
   final static String ENABLE = "enable"
   final static String POLL   = "poll"
 
-  protected Configuration cfg = null
+  protected Map<String,Object> config = new HashMap<>()
   protected TickerBehavior poll = null
   protected long pollInterval = 0
   protected boolean enabled = true
@@ -164,8 +164,8 @@ class Sentuator extends Agent {
         else enabled = false
       } else if (key == POLL) {
         setPollingInterval((long)value)
-      } else if (cfg != null && key != "class") {
-        cfg.setProperty(key, value)
+      } else if (config.containsKey(key)) {
+        config.put(key, value)
       }
     } catch (Exception ex) {
       // do nothing
@@ -178,10 +178,8 @@ class Sentuator extends Agent {
   protected Object getConfigParam(String key) {
     if (key == ENABLE) return enabled
     if (key == POLL) return pollInterval
-    if (cfg == "class") return null
-    if (cfg == null) return null
     try {
-      return cfg.getProperty(key)
+      return config.get(key)
     } catch (Exception ex) {
       // do nothing
     }
@@ -225,18 +223,13 @@ class Sentuator extends Agent {
         if (v != null) rsp.cfg.put(q, v)
       }
       if (req.settings.size() == 0 && req.queries.size() == 0) {
-        if (cfg != null) {
-          try {
-            rsp.cfg.put(ENABLE, enabled)
-            rsp.cfg.put(POLL, pollInterval)
-            cfg.properties.each { k, v ->
-              if (k instanceof String && k != "class") rsp.cfg.put((String)k, v)
-            }
-          } catch (Exception ex) {
-            // do nothing
-          }
+        rsp.cfg.put(ENABLE, enabled)
+        rsp.cfg.put(POLL, pollInterval)
+        config.each { String k, v ->
+          rsp.cfg.put(k, v)
         }
       }
+      if (rsp.cfg.size() == 0) return new Message(req, Performative.REFUSE)
       return rsp
     }
     return null
