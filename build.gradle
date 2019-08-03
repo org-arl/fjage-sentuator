@@ -35,6 +35,10 @@ jar {
   }
 }
 
+groovydoc {
+  destinationDir = file("docs")
+}
+
 ////// tasks for MavenCentral deployment
 
 task javadocJar(type: Jar, dependsOn: groovydoc) {
