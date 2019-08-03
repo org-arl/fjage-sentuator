@@ -22,6 +22,7 @@ class Sentuator extends Agent {
   @Override
   void init() {
     ntf = topic()
+    register(org.arl.fjage.sentuator.Services.SENTUATOR)
     setup()
     add new OneShotBehavior() {
       @Override
