@@ -167,14 +167,14 @@ class SentuatorSpec extends Specification {
       def rsp4 = aid << new ConfigurationReq()
     then:
       rsp1.keys().size() == 1
-      rsp1.get('ofs') == 0.0
+      rsp1.ofs == 0.0
       rsp2.performative == Performative.REFUSE
       rsp3.keys().size() == 1
-      rsp3.get('ofs') == 0.0
+      rsp3.ofs == 0.0
       rsp4.keys().size() == 3
-      rsp4.get('ofs') == 0.0
-      rsp4.get('enable') == true
-      rsp4.get('poll') == 0
+      rsp4.ofs == 0.0
+      rsp4.enable == true
+      rsp4.poll == 0
   }
 
   def "set configuration" () {
@@ -190,11 +190,11 @@ class SentuatorSpec extends Specification {
       def rsp7 = aid << new ConfigurationReq().get('bad')
     then:
       rsp1.keys().size() == 1
-      rsp1.get('ofs') == 1.0
+      rsp1.ofs == 1.0
       rsp2.x == 2.0
-      rsp3.get('ofs') == 1.0
+      rsp3.ofs == 1.0
       rsp4.keys().size() == 1
-      rsp4.get('ofs') == 0.0
+      rsp4.ofs == 0.0
       rsp5.x == 1.0
       rsp6.performative == Performative.REFUSE
       rsp7.performative == Performative.REFUSE
@@ -254,7 +254,9 @@ class SentuatorSpec extends Specification {
       aut.sentuatorName = null
     then:
       rsp1.get(Sentuator.NAME) == 'aut'
+      rsp1.name == 'aut'
       rsp2.get(Sentuator.NAME) == 'MySentuator'
+      rsp2.name == 'MySentuator'
   }
 
 }
