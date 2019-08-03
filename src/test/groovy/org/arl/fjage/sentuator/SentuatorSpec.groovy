@@ -245,4 +245,16 @@ class SentuatorSpec extends Specification {
       cnt2 == 0
   }
 
+  def "sentuator name" () {
+    when:
+      def aid = gw.agentForService(org.arl.fjage.sentuator.Services.SENTUATOR)
+      def rsp1 = aid << new ConfigurationReq().get(Sentuator.NAME)
+      aut.sentuatorName = 'MySentuator'
+      def rsp2 = aid << new ConfigurationReq().get(Sentuator.NAME)
+      aut.sentuatorName = null
+    then:
+      rsp1.get(Sentuator.NAME) == 'aut'
+      rsp2.get(Sentuator.NAME) == 'MySentuator'
+  }
+
 }

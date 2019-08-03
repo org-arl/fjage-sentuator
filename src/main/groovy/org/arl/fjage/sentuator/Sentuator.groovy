@@ -9,6 +9,7 @@ import org.arl.fjage.*
 @groovy.transform.CompileStatic
 class Sentuator extends Agent {
 
+  final static String NAME   = "name"
   final static String ENABLE = "enable"
   final static String POLL   = "poll"
 
@@ -16,6 +17,7 @@ class Sentuator extends Agent {
   protected TickerBehavior poll = null
   protected long pollInterval = 0
   protected boolean enabled = true
+  protected String sentuatorName = null
   protected AgentID ntf = null
   private Status currentStatus = new Status(Status.OK)
 
@@ -178,6 +180,7 @@ class Sentuator extends Agent {
   protected Object getConfigParam(String key) {
     if (key == ENABLE) return enabled
     if (key == POLL) return pollInterval
+    if (key == NAME) return sentuatorName?:getName()
     try {
       return config.get(key)
     } catch (Exception ex) {
