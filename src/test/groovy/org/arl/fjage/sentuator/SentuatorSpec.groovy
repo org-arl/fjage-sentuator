@@ -61,7 +61,8 @@ class SentuatorSpec extends Specification {
   @Shared Gateway gw
 
   def setupSpec() {
-    GroovyExtensions.enable()
+    org.arl.fjage.GroovyExtensions.enable()
+    org.arl.fjage.sentuator.GroovyExtensions.enable()
     platform = new RealTimePlatform()
     container = new Container(platform)
     aut = new MySentuator()
@@ -257,6 +258,37 @@ class SentuatorSpec extends Specification {
       rsp1.name == 'aut'
       rsp2.get(Sentuator.NAME) == 'MySentuator'
       rsp2.name == 'MySentuator'
+  }
+
+  def "groovy extensions" () {
+    given:
+      def aid = gw.agentForService(org.arl.fjage.sentuator.Services.SENTUATOR)
+      aid.set(1.0)
+      def cfg = aid.config.toString()
+      println(cfg)
+    expect:
+      aid.get().x == 1.0
+      aid.get('special').x == 2.0
+      aid.status == Status.OK
+      aid.config.enable == true
+      cfg instanceof String
+      cfg.split('\n').size() == 4
+  }
+
+  def "groovy extensions setter" () {
+    when:
+      def aid = gw.agentForService(org.arl.fjage.sentuator.Services.SENTUATOR)
+      aid.config.enable = false
+      def c1 = aid.config.enable
+      def s1 = aid.status
+      aid.config.enable = true
+      def c2 = aid.config.enable
+      def s2 = aid.status
+    then:
+      c1 == false
+      s1 == Status.DISABLED
+      c2 == true
+      s2 == Status.OK
   }
 
 }
