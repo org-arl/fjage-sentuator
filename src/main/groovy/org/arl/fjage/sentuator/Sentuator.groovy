@@ -226,8 +226,9 @@ class Sentuator extends Agent {
         if (v != null) rsp.cfg.put(q, v)
       }
       if (req.settings.size() == 0 && req.queries.size() == 0) {
-        rsp.cfg.put(ENABLE, enabled)
-        rsp.cfg.put(POLL, pollInterval)
+        rsp.cfg.put(NAME, getConfigParam(NAME))
+        rsp.cfg.put(ENABLE, getConfigParam(ENABLE))
+        rsp.cfg.put(POLL, getConfigParam(POLL))
         config.each { String k, v ->
           rsp.cfg.put(k, v)
         }

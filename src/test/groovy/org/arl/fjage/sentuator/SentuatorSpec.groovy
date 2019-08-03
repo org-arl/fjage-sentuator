@@ -171,7 +171,7 @@ class SentuatorSpec extends Specification {
       rsp2.performative == Performative.REFUSE
       rsp3.keys().size() == 1
       rsp3.ofs == 0.0
-      rsp4.keys().size() == 3
+      rsp4.keys().size() == 4
       rsp4.ofs == 0.0
       rsp4.enable == true
       rsp4.poll == 0
