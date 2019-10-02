@@ -30,34 +30,34 @@ class GroovyExtensions {
   static void enable() {
 
     AgentID.metaClass.get << { ->
-      if (delegate.owner == null) throw new FjageError('get() only supported on owned agents')
+      if (delegate.owner == null) throw new FjageException('get() only supported on owned agents')
       return request(new MeasurementReq(), 1000)
     }
 
     AgentID.metaClass.get << { String type ->
-      if (delegate.owner == null) throw new FjageError('get() only supported on owned agents')
+      if (delegate.owner == null) throw new FjageException('get() only supported on owned agents')
       return request(new MeasurementReq(type), 1000)
     }
 
     AgentID.metaClass.set << { value ->
-      if (delegate.owner == null) throw new FjageError('set() only supported on owned agents')
+      if (delegate.owner == null) throw new FjageException('set() only supported on owned agents')
       return request(new ActuationReq(value), 1000)
     }
 
     AgentID.metaClass.set << { String type, value ->
-      if (delegate.owner == null) throw new FjageError('set() only supported on owned agents')
+      if (delegate.owner == null) throw new FjageException('set() only supported on owned agents')
       return request(new ActuationReq(type, value), 1000)
     }
 
     AgentID.metaClass.getStatus = { ->
-      if (delegate.owner == null) throw new FjageError('status only supported on owned agents')
+      if (delegate.owner == null) throw new FjageException('status only supported on owned agents')
       def rsp = request(new StatusReq(), 1000)
       if (rsp instanceof Status) return rsp.status + (rsp.message?': '+rsp.message:'')
-      throw new FjageError('status not supported by agent')
+      throw new FjageException('status not supported by agent')
     }
 
     AgentID.metaClass.getConfig = { ->
-      if (delegate.owner == null) throw new FjageError('configuration only supported on owned agents')
+      if (delegate.owner == null) throw new FjageException('configuration only supported on owned agents')
       return new ConfigHelper(parent: delegate)
     }
 
@@ -73,13 +73,13 @@ class ConfigHelper {
   def propertyMissing(String name, value) {
     def rsp = parent.request(new ConfigurationReq().set(name, value), 1000)
     if (!(rsp instanceof ConfigurationRsp))
-      throw new FjageError('configuration not supported by agent')
+      throw new FjageException('configuration not supported by agent')
   }
 
   def propertyMissing(String name) {
     def rsp = parent.request(new ConfigurationReq().get(name), 1000)
     if (rsp instanceof ConfigurationRsp) return rsp.get(name)
-    throw new FjageError('configuration not supported by agent')
+    throw new FjageException('configuration not supported by agent')
   }
 
   String toString() {
@@ -92,7 +92,7 @@ class ConfigHelper {
       }
       return sb.toString()
     }
-    throw new FjageError('configuration not supported by agent')
+    throw new FjageException('configuration not supported by agent')
   }
 
 }
