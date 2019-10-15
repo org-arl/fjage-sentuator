@@ -263,12 +263,12 @@ class SentuatorSpec extends Specification {
   def "groovy extensions" () {
     given:
       def aid = gw.agentForService(org.arl.fjage.sentuator.Services.SENTUATOR)
-      aid.set(1.0)
+      aid.actuate(1.0)
       def cfg = aid.config.toString()
       println(cfg)
     expect:
-      aid.get().x == 1.0
-      aid.get('special').x == 2.0
+      aid.measure().x == 1.0
+      aid.measure('special').x == 2.0
       aid.status == Status.OK
       aid.config.enable == true
       cfg instanceof String
