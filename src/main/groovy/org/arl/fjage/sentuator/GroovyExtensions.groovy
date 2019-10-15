@@ -6,10 +6,10 @@ import org.arl.fjage.*
  * Syntax extensions for easier usage in shells and Groovy agents.
  * <p>
  * <pre>
- * aid.get()
- * aid.get(type)
- * aid.set(value)
- * aid.set(type, value)
+ * aid.measure()
+ * aid.measure(type)
+ * aid.actuate(value)
+ * aid.actuate(type, value)
  * aid.status
  * aid.config
  * aid.config.xxx
@@ -29,23 +29,23 @@ class GroovyExtensions {
    */
   static void enable() {
 
-    AgentID.metaClass.get << { ->
-      if (delegate.owner == null) throw new FjageException('get() only supported on owned agents')
+    AgentID.metaClass.measure << { ->
+      if (delegate.owner == null) throw new FjageException('measure() only supported on owned agents')
       return request(new MeasurementReq(), 1000)
     }
 
-    AgentID.metaClass.get << { String type ->
-      if (delegate.owner == null) throw new FjageException('get() only supported on owned agents')
+    AgentID.metaClass.measure << { String type ->
+      if (delegate.owner == null) throw new FjageException('measure() only supported on owned agents')
       return request(new MeasurementReq(type), 1000)
     }
 
-    AgentID.metaClass.set << { value ->
-      if (delegate.owner == null) throw new FjageException('set() only supported on owned agents')
+    AgentID.metaClass.actuate << { value ->
+      if (delegate.owner == null) throw new FjageException('actuate() only supported on owned agents')
       return request(new ActuationReq(value), 1000)
     }
 
-    AgentID.metaClass.set << { String type, value ->
-      if (delegate.owner == null) throw new FjageException('set() only supported on owned agents')
+    AgentID.metaClass.actuate << { String type, value ->
+      if (delegate.owner == null) throw new FjageException('actuate() only supported on owned agents')
       return request(new ActuationReq(type, value), 1000)
     }
 
