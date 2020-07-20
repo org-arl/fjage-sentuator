@@ -11,9 +11,6 @@ import org.arl.fjage.*
  * aid.actuate(value)
  * aid.actuate(type, value)
  * aid.status
- * aid.config
- * aid.config.xxx
- * aid.config.xxx = yyy
  * </pre>
  */
 class GroovyExtensions {
@@ -56,43 +53,6 @@ class GroovyExtensions {
       throw new FjageException('status not supported by agent')
     }
 
-    AgentID.metaClass.getConfig = { ->
-      if (delegate.owner == null) throw new FjageException('configuration only supported on owned agents')
-      return new ConfigHelper(parent: delegate)
-    }
-
-  }
-
-}
-
-@groovy.transform.PackageScope
-class ConfigHelper {
-
-  def parent
-
-  def propertyMissing(String name, value) {
-    def rsp = parent.request(new ConfigurationReq().set(name, value), 1000)
-    if (!(rsp instanceof ConfigurationRsp))
-      throw new FjageException('configuration not supported by agent')
-  }
-
-  def propertyMissing(String name) {
-    def rsp = parent.request(new ConfigurationReq().get(name), 1000)
-    if (rsp instanceof ConfigurationRsp) return rsp.get(name)
-    throw new FjageException('configuration not supported by agent')
-  }
-
-  String toString() {
-    def rsp = parent.request(new ConfigurationReq(), 2000)
-    if (rsp instanceof ConfigurationRsp) {
-      StringBuffer sb = new StringBuffer()
-      sb.append "[${rsp.cfg.name}]\n"
-      rsp.cfg.each { k, v ->
-        if (k != 'name') sb.append "${k} = ${v}\n"
-      }
-      return sb.toString()
-    }
-    throw new FjageException('configuration not supported by agent')
   }
 
 }

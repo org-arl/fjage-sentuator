@@ -2,6 +2,7 @@ package org.arl.fjage.sentuator
 
 import java.util.logging.Level
 import org.arl.fjage.*
+import org.arl.fjage.param.*
 
 /**
  * Sentuator agent base class.
@@ -9,14 +10,14 @@ import org.arl.fjage.*
 @groovy.transform.CompileStatic
 class Sentuator extends Agent {
 
-  final static String NAME   = "name"
-  final static String ENABLE = "enable"
-  final static String POLL   = "poll"
+  final static Parameter NAME = new NamedParameter('title')
+  final static Parameter ENABLE = SentuatorParam.enable
+  final static Parameter POLL   = SentuatorParam.poll
 
   protected Map<String,Object> config = new HashMap<>()
   protected TickerBehavior poll = null
   protected long pollInterval = 0
-  protected boolean enabled = true
+  protected boolean enabled = false
   protected String sentuatorName = null
   protected AgentID ntf = null
   private Status currentStatus = new Status(Status.OK)
@@ -30,6 +31,28 @@ class Sentuator extends Agent {
       @Override
       public void action() {
         startup()
+      }
+    }
+    add new ParameterMessageBehavior() {
+      @Override
+      Object getParam(Parameter p, int ndx) {
+        if (ndx >= 0) return null
+        return getConfigParam(p as String)
+      }
+      @Override
+      Object setParam(Parameter p, int ndx, Object v) {
+        if (ndx >= 0) return null
+        setConfigParam(p as String, v)
+        return getConfigParam(p as String)
+      }
+      @Override
+      List<? extends Parameter> getParameterList() {
+        List<Parameter> p = []
+        p.addAll EnumSet.allOf(SentuatorParam)
+        config.keySet().each { k ->
+          p.add new ConfigParam(k)
+        }
+        return p
       }
     }
     add new MessageBehavior() {
@@ -113,10 +136,10 @@ class Sentuator extends Agent {
    * @param ms polling interval in milliseconds, 0 to disable.
    */
   protected void setPollingInterval(long ms) {
-    if (poll != null) poll.stop()
-    if (ms <= 0 || !enabled) poll = null
+    if (this.@poll != null) this.@poll.stop()
+    if (ms <= 0 || !enabled) this.@poll = null
     else {
-      poll = new TickerBehavior(ms) {
+      this.@poll = new TickerBehavior(ms) {
         @Override
         void onTick() {
           Measurement m = measure()
@@ -126,7 +149,7 @@ class Sentuator extends Agent {
           }
         }
       }
-      add(poll)
+      add(this.@poll)
     }
     if (ms >= 0) pollInterval = ms
   }
@@ -166,9 +189,7 @@ class Sentuator extends Agent {
    */
   protected void setConfigParam(String key, Object value) {
     try {
-      if (key == ENABLE) enable(value as boolean)
-      else if (key == POLL) setPollingInterval((long)value)
-      else if (config.containsKey(key)) config.put(key, value)
+      if (config.containsKey(key)) config.put(key, value)
     } catch (Exception ex) {
       // do nothing
     }
@@ -178,9 +199,6 @@ class Sentuator extends Agent {
    * Get configuration parameter.
    */
   protected Object getConfigParam(String key) {
-    if (key == ENABLE) return enabled
-    if (key == POLL) return pollInterval
-    if (key == NAME) return sentuatorName?:getName()
     try {
       return config.get(key)
     } catch (Exception ex) {
@@ -214,28 +232,6 @@ class Sentuator extends Agent {
       status.inReplyTo = req.messageID
       return status
     }
-    if (req instanceof ConfigurationReq) {
-      ConfigurationRsp rsp = new ConfigurationRsp(req)
-      req.settings.each { k, v ->
-        setConfigParam(k, v)
-        Object v1 = getConfigParam(k)
-        if (v1 != null) rsp.cfg.put(k, v1)
-      }
-      req.queries.each { q ->
-        Object v = getConfigParam(q)
-        if (v != null) rsp.cfg.put(q, v)
-      }
-      if (req.settings.size() == 0 && req.queries.size() == 0) {
-        rsp.cfg.put(NAME, getConfigParam(NAME))
-        rsp.cfg.put(ENABLE, getConfigParam(ENABLE))
-        rsp.cfg.put(POLL, getConfigParam(POLL))
-        config.each { String k, v ->
-          rsp.cfg.put(k, v)
-        }
-      }
-      if (rsp.cfg.size() == 0) return new Message(req, Performative.REFUSE)
-      return rsp
-    }
     return null
   }
 
@@ -253,6 +249,43 @@ class Sentuator extends Agent {
    */
   void setLogLevel(Level lvl) {
     log.setLevel(lvl)
+  }
+
+  /**
+   * Get sentuator name.
+   */
+  String getTitle() {
+    return sentuatorName?:super.getName()
+  }
+
+  /**
+   * Check if the sentuator is enabled.
+   */
+  boolean getEnable() {
+    return enabled
+  }
+
+  /**
+   * Check if the sentuator is enabled.
+   */
+  boolean setEnable(boolean b) {
+    enable(b)
+    return enabled
+  }
+
+  /**
+   * Gets the polling interval for the sentuator.
+   */
+  long getPoll() {
+    return pollInterval
+  }
+
+  /**
+   * Sets the polling interval for the sentuator.
+   */
+  long setPoll(long v) {
+    setPollingInterval(v)
+    return pollInterval
   }
 
 }

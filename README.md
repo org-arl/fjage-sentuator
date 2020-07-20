@@ -62,42 +62,63 @@ We then setup the environment for easy interaction with sentuators:
 ```
 and play with our simple demo sentuator:
 ```console
-> mysen.config
-[Demo Sentuator]
-enable = true
-poll = 0
-ofs = 0.0
-> mysen.config.ofs = 1.0
+> mysen
+« Demo Sentuator »
+
+[org.arl.fjage.sentuator.ConfigParam]
+  ofs ⤇ 0.0
+
+[org.arl.fjage.sentuator.SentuatorParam]
+  enable = false
+  poll = 0
+
+> mysen.enable = true
+true
+
+> mysen.ofs = 1.0
 1.0
-> mysen.config
-[Demo Sentuator]
-enable = true
-poll = 0
-ofs = 1.0
+
+> mysen
+« Demo Sentuator »
+
+[org.arl.fjage.sentuator.ConfigParam]
+  ofs ⤇ 1.0
+
+[org.arl.fjage.sentuator.SentuatorParam]
+  enable = true
+  poll = 0
+
 > mysen.status
 OK
-> mysen.get()
+
+> mysen.measure()
 MyMeasurement:INFORM[time:1564864732645 x:1.6736608]
-> mysen.get()
+
+> mysen.measure()
 MyMeasurement:INFORM[time:1564864733895 x:1.7872058]
-> mysen.get()
+
+> mysen.measure()
 MyMeasurement:INFORM[time:1564864734752 x:1.0283573]
-> mysen.get().x
+
+> mysen.measure().x
 2.8090699
-> mysen.get().x
+
+> mysen.measure().x
 2.395348
-> mysen.set(2)   // we have not defined an actuate() method, so this should fail
+
+> mysen.actuate(2)   // we have not defined an actuate() method, so this should fail
 REFUSE
+
 > subscribe(topic(mysen))
-> mysen.config.poll = 100   // get us a measurement every 100 ms
+> mysen.poll = 100   // get us a measurement every 100 ms
 100
 mysen >> MyMeasurement:INFORM[time:1564865016105 x:2.6327257]
 mysen >> MyMeasurement:INFORM[time:1564865016207 x:2.7943153]
 mysen >> MyMeasurement:INFORM[time:1564865016307 x:2.8590062]
 mysen >> MyMeasurement:INFORM[time:1564865018704 x:2.7272174]
-> mysen.config.poll = 0
+
+> mysen.poll = 0
 0
->
 ```
 
 For more information on doing cool stuff with fjåge-sentuators, check out the [API documentation](http://org-arl.github.io/fjage-sentuator/).
@@ -114,7 +135,7 @@ Maven Central dependency
     <dependency>
       <groupId>com.github.org-arl</groupId>
       <artifactId>fjage-sentuator</artifactId>
-      <version>1.0</version>
+      <version>1.1.0</version>
     </dependency>
 
 Contributing
