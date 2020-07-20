@@ -31,11 +31,6 @@ import org.arl.fjage.sentuator.*
 
 class MySentuator extends Sentuator {
 
-  // define your measurements
-  static class MyMeasurement extends Measurement {
-    float x
-  }
-
   void setup() {
     sentuatorName = 'Demo Sentuator'    // name your sentuator
     config.ofs = 0.0                    // setup your configuration parameters
@@ -43,7 +38,9 @@ class MySentuator extends Sentuator {
 
   Measurement measure() {
     // generate a random measurement with the configured offset
-    return new MyMeasurement(x: Math.random() + config.ofs)
+    def m = new GenericMeasurement(type: sentuatorName)
+    m.x = new Quantity(Math.random() + config.ofs, 'm')
+    return m
   }
 
 }
@@ -92,19 +89,19 @@ true
 OK
 
 > mysen.measure()
-MyMeasurement:INFORM[time:1564864732645 x:1.6736608]
+GenericMeasurement[type:Demo Sentuator x:1.01437940 m]
 
 > mysen.measure()
-MyMeasurement:INFORM[time:1564864733895 x:1.7872058]
+GenericMeasurement[type:Demo Sentuator x:1.7872058 m]
 
 > mysen.measure()
-MyMeasurement:INFORM[time:1564864734752 x:1.0283573]
+GenericMeasurement[type:Demo Sentuator x:1.0283573 m]
 
 > mysen.measure().x
-2.8090699
+1.8090699
 
 > mysen.measure().x
-2.395348
+1.395348
 
 > mysen.actuate(2)   // we have not defined an actuate() method, so this should fail
 REFUSE
