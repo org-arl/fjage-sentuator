@@ -20,7 +20,7 @@ class Measurement extends Message {
   @Override
   String toString() {
     StringBuffer sb = new StringBuffer()
-    sb.append(getClass().getSimpleName() + ':' + performative + '[')
+    sb.append(getClass().getSimpleName() + '[')
     boolean first = true
     this.properties.each { k, v ->
       if (!(k in ['class', 'sender', 'recipient', 'messageID', 'performative', 'inReplyTo'])) {

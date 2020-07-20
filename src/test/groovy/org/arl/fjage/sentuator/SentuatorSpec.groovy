@@ -281,4 +281,20 @@ class SentuatorSpec extends Specification {
       s2 == Status.OK
   }
 
+  def "generic measurements" () {
+    when:
+      def m = new GenericMeasurement(id: 'ID', type: 'XXX')
+      def q1 = new Quantity(27.42)
+      def q2 = new Quantity(42.27, 'm')
+      m.abc = q1
+      m.xyz = q2
+    then:
+      m.id == 'ID'
+      m.type == 'XXX'
+      m.abc == q1
+      m.xyz == q2
+      q1.toString() == '27.42'
+      q2.toString() == '42.27 m'
+  }
+
 }
