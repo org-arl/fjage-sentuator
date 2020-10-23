@@ -109,10 +109,10 @@ REFUSE
 > subscribe(topic(mysen))
 > mysen.poll = 100   // get us a measurement every 100 ms
 100
-mysen >> MyMeasurement:INFORM[time:1564865016105 x:2.6327257]
-mysen >> MyMeasurement:INFORM[time:1564865016207 x:2.7943153]
-mysen >> MyMeasurement:INFORM[time:1564865016307 x:2.8590062]
-mysen >> MyMeasurement:INFORM[time:1564865018704 x:2.7272174]
+mysen >> GenericMeasurement:INFORM[time:1564865016105 x:2.6327257]
+mysen >> GenericMeasurement:INFORM[time:1564865016207 x:2.7943153]
+mysen >> GenericMeasurement:INFORM[time:1564865016307 x:2.8590062]
+mysen >> GenericMeasurement:INFORM[time:1564865018704 x:2.7272174]
 
 > mysen.poll = 0
 0
