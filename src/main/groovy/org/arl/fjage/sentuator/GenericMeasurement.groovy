@@ -8,6 +8,7 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class GenericMeasurement extends Measurement implements Map<String,Quantity>{
 
+  @Delegate
   protected Map<String,Quantity> values = [:]
   protected String id = null
   protected String type = null
@@ -75,65 +76,5 @@ class GenericMeasurement extends Measurement implements Map<String,Quantity>{
     }
     sb.append(']')
     return sb.toString()
-  }
-
-  @Override
-  int size() {
-    values.size()
-  }
-
-  @Override
-  boolean isEmpty() {
-    values.isEmpty()
-  }
-
-  @Override
-  boolean containsKey(Object key) {
-    values.containsKey(key)
-  }
-
-  @Override
-  boolean containsValue(Object value) {
-    values.containsValue(value)
-  }
-
-  @Override
-  Quantity get(Object key) {
-    values.get(key)
-  }
-
-  @Override
-  Quantity put(String key, Quantity value) {
-    values.put(key, value)
-  }
-
-  @Override
-  Quantity remove(Object key) {
-    values.remove(key)
-  }
-
-  @Override
-  void putAll(Map<? extends String, ? extends Quantity> m) {
-    values.putAll(m)
-  }
-
-  @Override
-  void clear() {
-    values.clear()
-  }
-
-  @Override
-  Set<String> keySet() {
-    values.keySet()
-  }
-
-  @Override
-  Collection<Quantity> values() {
-    values.values()
-  }
-
-  @Override
-  Set<Entry<String, Quantity>> entrySet() {
-    values.entrySet()
   }
 }
