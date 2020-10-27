@@ -1,3 +1,4 @@
+import groovy.transform.CompileStatic
 import spock.lang.*
 import org.arl.fjage.*
 import org.arl.fjage.param.*
@@ -281,20 +282,29 @@ class SentuatorSpec extends Specification {
       s2 == Status.OK
   }
 
-  def "generic measurements" () {
-    when:
+  @groovy.transform.CompileStatic
+  class GenericMeasurementTest {
+    static boolean run() {
       def m = new GenericMeasurement(id: 'ID', type: 'XXX')
       def q1 = new Quantity(27.42)
       def q2 = new Quantity(42.27, 'm')
       m.abc = q1
       m.xyz = q2
-    then:
-      m.id == 'ID'
-      m.type == 'XXX'
-      m.abc == q1
-      m.xyz == q2
-      q1.toString() == '27.42'
-      q2.toString() == '42.27 m'
+      assert m.getSensorID() == 'ID'
+      assert m.getSensorType() == 'XXX'
+      assert m.getSensorType() == 'XXX'
+      assert m.abc == q1
+      assert m.xyz == q2
+      assert q1.toString() == '27.42'
+      assert q2.toString() == '42.27 m'
+      return true
+    }
   }
 
+  def "generic measurements" () {
+    when:
+      def passed = GenericMeasurementTest.run()
+    then:
+      passed
+  }
 }
