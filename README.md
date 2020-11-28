@@ -132,7 +132,7 @@ Maven Central dependency
     <dependency>
       <groupId>com.github.org-arl</groupId>
       <artifactId>fjage-sentuator</artifactId>
-      <version>1.2.0</version>
+      <version>1.2.1</version>
     </dependency>
 
 Contributing

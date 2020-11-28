@@ -27,8 +27,9 @@ class Quantity {
   @Override
   String toString() {
     if (value == null) return null
-    if (units == null) return value.toString()
-    return "$value $units"
+    String vstr = value.class.isArray() ? '<data>' : value.toString()
+    if (units == null) return vstr
+    return "$vstr $units"
   }
 
 }
