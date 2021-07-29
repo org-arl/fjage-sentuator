@@ -46,7 +46,7 @@ class MySentuator extends Sentuator {
 }
 ```
 
-Place this agent and `fjage-sentuator-1.0.jar` in the classpath, and fire up fjåge to interact with the agent. On the shell, we load the sentuator agent:
+Place this agent and `fjage-sentuator.jar` in the classpath, and fire up fjåge to interact with the agent. On the shell, we load the sentuator agent:
 ```console
 > container.add 'mysen', new MySentuator()
 > ps

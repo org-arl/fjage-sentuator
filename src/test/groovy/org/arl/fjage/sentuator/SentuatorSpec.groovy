@@ -282,7 +282,6 @@ class SentuatorSpec extends Specification {
       s2 == Status.OK
   }
 
-  @groovy.transform.CompileStatic
   class GenericMeasurementTest {
     static boolean run() {
       def m = new GenericMeasurement(id: 'ID', type: 'XXX')
@@ -301,10 +300,37 @@ class SentuatorSpec extends Specification {
     }
   }
 
+  @groovy.transform.CompileStatic
+  class StaticGenericMeasurementTest {
+    static boolean run() {
+      def m = new GenericMeasurement(id: 'ID', type: 'XXX')
+      def q1 = new Quantity(27.42)
+      def q2 = new Quantity(42.27, 'm')
+      m.set('abc', q1)
+      m.set('xyz', q2)
+      assert m.getSensorID() == 'ID'
+      assert m.getSensorType() == 'XXX'
+      assert m.getSensorType() == 'XXX'
+      assert m.get('abc') == q1
+      assert m.get('xyz') == q2
+      assert q1.toString() == '27.42'
+      assert q2.toString() == '42.27 m'
+      return true
+    }
+  }
+
   def "generic measurements" () {
     when:
       def passed = GenericMeasurementTest.run()
     then:
       passed
   }
+
+  def "generic measurements (static)" () {
+    when:
+      def passed = StaticGenericMeasurementTest.run()
+    then:
+      passed
+  }
+
 }

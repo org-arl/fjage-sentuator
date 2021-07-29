@@ -6,9 +6,8 @@ import groovy.transform.CompileStatic
  * Generic key-value measurement made by a sensor.
  */
 @CompileStatic
-class GenericMeasurement extends Measurement implements Map<String,Quantity>{
+class GenericMeasurement extends Measurement {
 
-  @Delegate
   protected Map<String,Quantity> values = [:]
   protected String id = null
   protected String type = null
@@ -53,6 +52,35 @@ class GenericMeasurement extends Measurement implements Map<String,Quantity>{
    */
   Quantity get(String key) {
     return values.get(key)
+  }
+
+  /**
+   * Get keys for all measured quantities.
+   */
+  Set<String> keySet() {
+    return values.keySet()
+  }
+
+  /**
+   * Groovy support for msg.key = value syntax.
+   */
+  void missingProperty(String key, Object value) {
+    try {
+      set(key, (Quantity)value)
+    } catch (Exception ex) {
+      throw new MissingPropertyException(key, GenericMeasurement)
+    }
+  }
+
+  /**
+   * Groovy support for msg.key syntax.
+   */
+  void missingProperty(String key) {
+    try {
+      get(key)
+    } catch (Exception ex) {
+      throw new MissingPropertyException(key, GenericMeasurement)
+    }
   }
 
   @Override
