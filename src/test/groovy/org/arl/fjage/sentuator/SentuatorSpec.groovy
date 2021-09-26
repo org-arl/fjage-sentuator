@@ -198,6 +198,22 @@ class SentuatorSpec extends Specification {
       rsp5.x == 1.0
   }
 
+  def "deserialize configuration parameter" () {
+    when:
+      ParameterReq parameterReq = new ParameterReq()
+      ParameterRsp parameterRsp = new ParameterRsp(parameterReq)
+      parameterRsp.set(SentuatorParam.enable, true, false)
+      parameterRsp.set(new ConfigParam("level"), 1, false)
+      def jsonMessage = new org.arl.fjage.remote.JsonMessage()
+      jsonMessage.message = parameterRsp
+      String json = jsonMessage.toJson()
+      def jsonMessage1 = org.arl.fjage.remote.JsonMessage.fromJson(json)
+      def msg = jsonMessage1.message
+    then:
+      msg.get(SentuatorParam.enable) == true
+      msg.get(new ConfigParam("level")) == 1
+  }
+
   def "status management" () {
     when:
       def aid = gw.agentForService(org.arl.fjage.sentuator.Services.SENTUATOR)
