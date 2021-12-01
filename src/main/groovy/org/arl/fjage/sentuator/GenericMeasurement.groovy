@@ -9,36 +9,6 @@ import groovy.transform.CompileStatic
 class GenericMeasurement extends Measurement {
 
   protected Map<String,Quantity> values = [:]
-  protected String id = null
-  protected String type = null
-
-  /**
-   * Set sensor ID.
-   */
-  void setSensorID(String id) {
-    this.id = id
-  }
-
-  /**
-   * Get sensor ID.
-   */
-  String getSensorID() {
-    return id
-  }
-
-  /**
-   * Set sensor type.
-   */
-  void setSensorType(String type) {
-    this.type = type
-  }
-
-  /**
-   * Get sensor type.
-   */
-  String getSensorType() {
-    return type
-  }
 
   /**
    * Add a measured quantity.
