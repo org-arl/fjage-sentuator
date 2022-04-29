@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/org-arl/fjage-sentuator.svg?branch=master)](https://travis-ci.org/org-arl/fjage-sentuator)
-
 fjåge-sentuator
 ===============
 **Sensor/actuator framework for fjåge**
@@ -132,7 +130,7 @@ Maven Central dependency
     <dependency>
       <groupId>com.github.org-arl</groupId>
       <artifactId>fjage-sentuator</artifactId>
-      <version>1.2.1</version>
+      <version>1.3.0</version>
     </dependency>
 
 Contributing
