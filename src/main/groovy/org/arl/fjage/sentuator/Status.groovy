@@ -8,6 +8,7 @@ import org.arl.fjage.*
 @groovy.transform.CompileStatic
 class Status extends Message {
 
+  final static String INIT      = "INIT"
   final static String OK        = "OK"
   final static String DISABLED  = "DISABLED"
   final static String WARNING   = "WARNING"
