@@ -46,6 +46,11 @@ class Sentuator extends Agent {
         return getConfigParam(p as String)
       }
       @Override
+      protected boolean isReadOnly(Parameter p, int ndx) {
+        if (getConfigParam(p.toString()) != null) return false;
+        return super.isReadOnly(p, ndx);
+      }
+      @Override
       List<? extends Parameter> getParameterList() {
         List<Parameter> p = []
         p.addAll EnumSet.allOf(SentuatorParam)
