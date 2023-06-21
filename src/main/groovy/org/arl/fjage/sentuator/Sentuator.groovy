@@ -20,7 +20,7 @@ class Sentuator extends Agent {
   protected boolean enabled = false
   protected String sentuatorName = null
   protected AgentID ntf = null
-  private Status currentStatus = new Status(Status.OK)
+  private Status currentStatus = new Status(Status.INIT)
 
   @Override
   void init() {
@@ -70,6 +70,7 @@ class Sentuator extends Agent {
         }
       }
     }
+    setPollStatus(enabled)
   }
 
   @Override
@@ -126,13 +127,7 @@ class Sentuator extends Agent {
   protected void enable(boolean b) {
     if (enabled == b) return
     enabled = b
-    if (b) {
-      if (pollInterval > 0) setPollingInterval(pollInterval)
-      setStatus(Status.OK)
-    } else {
-      setPollingInterval(-1)
-      setStatus(Status.DISABLED)
-    }
+    if (currentStatus.status != Status.INIT) setPollStatus(b)
   }
 
   /**
@@ -142,7 +137,7 @@ class Sentuator extends Agent {
    */
   protected void setPollingInterval(long ms) {
     if (this.@poll != null) this.@poll.stop()
-    if (ms <= 0 || !enabled) this.@poll = null
+    if (ms <= 0 || !enabled || currentStatus.status == Status.INIT) this.@poll = null
     else {
       this.@poll = new TickerBehavior(ms) {
         @Override
@@ -291,6 +286,17 @@ class Sentuator extends Agent {
   long setPoll(long v) {
     setPollingInterval(v)
     return pollInterval
+  }
+
+  // Helpers
+  private setPollStatus(boolean b){
+    if (b) {
+      if (pollInterval > 0) setPollingInterval(pollInterval)
+      setStatus(Status.OK)
+    } else {
+      setPollingInterval(-1)
+      setStatus(Status.DISABLED)
+    }
   }
 
 }
