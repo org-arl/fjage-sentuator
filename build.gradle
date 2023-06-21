@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
   compile 'org.codehaus.groovy:groovy:2.5.9'
-  compile 'com.github.org-arl:fjage:1.10.2'
+  compile 'com.github.org-arl:fjage:1.11.0'
   testCompile 'junit:junit:4.12'
   testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 }
