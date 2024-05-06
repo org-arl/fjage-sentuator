@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'org.codehaus.groovy:groovy:2.5.9'
+  implementation 'org.codehaus.groovy:groovy:2.5.20'
   implementation 'com.github.org-arl:fjage:1.11.0'
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.spockframework:spock-core:1.0-groovy-2.4'
