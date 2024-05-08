@@ -27,7 +27,10 @@ class Quantity {
   @Override
   String toString() {
     if (value == null) return null
-    String vstr = value.class.isArray() ? '<data>' : value.toString()
+    String vstr = value.toString()
+    if (value.class.isArray()){
+      vstr = (value as Object[]).size() > 3 ? "<data>" : "[" + value.collect{it.toString()}.join(", ") + "]"
+    }
     if (units == null) return vstr
     return "$vstr $units"
   }
